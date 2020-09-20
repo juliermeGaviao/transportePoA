@@ -1,5 +1,8 @@
 package com.dinamica.transportePoA.converter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,5 +42,17 @@ public class ItinerarioConverter {
 
 		return result;
 	}
-	
+
+	public List<ItinerarioDto> toDtoList(List<Itinerario> itinerarios) {
+		List<ItinerarioDto> result = new ArrayList<>();
+
+		if (itinerarios != null && !itinerarios.isEmpty()) {
+			for (Itinerario itinerario : itinerarios) {
+				result.add(this.toDto(itinerario));
+			}
+		}
+
+		return result;
+	}
+
 }

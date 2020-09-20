@@ -19,6 +19,15 @@
             </column>
         </createTable>
         <addAutoIncrement tableName="linha" columnName="id" columnDataType="int" incrementBy="1" startWith="1"/>
+        <createIndex tableName="linha" indexName="idx_linha_01" unique="true">
+        	<column autoIncrement="true" name="id"/>
+        </createIndex>
+        <createIndex tableName="linha" indexName="idx_linha_02">
+        	<column name="codigo"/>
+        </createIndex>
+        <createIndex tableName="linha" indexName="idx_linha_03">
+        	<column name="nome"/>
+        </createIndex>
     </changeSet>
 
     <changeSet id="2" author="Julierme">
@@ -41,6 +50,13 @@
         </createTable>
         <addAutoIncrement tableName="itinerario" columnName="id" columnDataType="int" incrementBy="1" startWith="1"/>
         <addForeignKeyConstraint constraintName="FK_itinerario_linha" referencedTableName="linha" baseColumnNames="linha_id" baseTableName="itinerario" referencedColumnNames="id" onUpdate="CASCADE" onDelete="CASCADE"/>
+        <createIndex tableName="itinerario" indexName="idx_itinerario_01" unique="true">
+        	<column autoIncrement="true" name="id"/>
+        </createIndex>
+        <createIndex tableName="itinerario" indexName="idx_itinerario_02">
+        	<column name="linha_id"/>
+        	<column name="ordem"/>
+        </createIndex>
     </changeSet>
 
 </databaseChangeLog>
