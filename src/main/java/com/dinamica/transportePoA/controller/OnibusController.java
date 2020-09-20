@@ -22,6 +22,7 @@ import com.dinamica.transportePoA.model.Itinerario;
 import com.dinamica.transportePoA.model.Linha;
 import com.dinamica.transportePoA.repository.ItinerarioRepository;
 import com.dinamica.transportePoA.repository.LinhaRepository;
+import com.dinamica.transportePoA.service.GeodeticService;
 
 @RestController
 public class OnibusController {
@@ -38,11 +39,15 @@ public class OnibusController {
 	@Autowired
 	private ItinerarioConverter itinerarioConverter;
 
+	@Autowired
+	private GeodeticService geodeticService;
+
 	@RequestMapping("/onibus/buscarLinhaPeloNome/{nome}")
 	public ResponseEntity<?> findLinhaByName(@PathVariable String nome) {
 		List<LinhaDto> linhasDto = new ArrayList<>();
 
 		if (nome != null && nome.trim().length() > 0) {
+			// Utiliza a busca através de LIKE, do SQL
 			List<Linha> linhas = this.linhaRepository.containsName(nome.trim().toUpperCase());
 
 			linhasDto.addAll(this.getLineDtos(linhas));
@@ -89,6 +94,7 @@ public class OnibusController {
 		} else if (linhaDto.getCodigo() == null || linhaDto.getCodigo().trim().length() == 0) {
 			result = new ResponseEntity<String>("Código é de preenchimento obrigatório!", HttpStatus.BAD_REQUEST);
 		} else {
+			// Impede gravação de múltiplas linhas com o mesmo código
 			List<Linha> linesSameCode = this.linhaRepository.findByCode(linhaDto.getCodigo().trim());
 
 			if (linesSameCode != null && !linesSameCode.isEmpty()) {
@@ -118,6 +124,7 @@ public class OnibusController {
 		} else if (!this.linhaRepository.existsById(linhaDto.getId())) {
 			result = new ResponseEntity<String>("Linha com a identifiação [" + linhaDto.getId().toString() + "] não encontrada!", HttpStatus.BAD_REQUEST);
 		} else {
+			// Não permite mudar o código da linha caso exista outra com o mesmo código
 			int sameCode = this.otherLineExists(linhaDto.getId(), this.linhaRepository.findByCode(linhaDto.getCodigo().trim().toUpperCase()));
 
 			if (sameCode > 0) {
@@ -142,6 +149,7 @@ public class OnibusController {
 		if (idLinha == null || idLinha.intValue() <= 0) {
 			result = new ResponseEntity<String>("A identificação da linha é inválida!", HttpStatus.BAD_REQUEST);
 		} else {
+			// Optional<?> é uma opção ao existsById do CRUDRepository
 			Optional<Linha> linha = this.linhaRepository.findById(idLinha);
 
 			if (linha.isPresent()) {
@@ -165,6 +173,8 @@ public class OnibusController {
 			List<Itinerario> itinerarios = this.itinerarioRepository.findByLine(idLinha);
 
 			if (itinerarios != null && !itinerarios.isEmpty()) {
+				// Usuário da API não tem visibilidade de Entities, apenas de seus correspondentes DTOs
+				// Isso forma camadas de software, favorecendo mudanças futuras com menor custo possível
 				List<ItinerarioDto> itinerariosDto = this.itinerarioConverter.toDtoList(itinerarios);
 
 				result = new ResponseEntity<List<ItinerarioDto>>(itinerariosDto, HttpStatus.OK);
@@ -189,7 +199,10 @@ public class OnibusController {
 		} else if (!this.linhaRepository.existsById(idLinha)) {
 			result = new ResponseEntity<String>("Não existe linha com identificação [" + idLinha.toString() + "]!", HttpStatus.BAD_REQUEST);
 		} else {
+			// Ao inserir um ponto de itinerário, a maior ordem é utilizada, independentemente se um ponto no meio tenha sido removido
+			// Ainda assim, a ordem entre os pontos é preservada
 			Integer ordem = this.itinerarioRepository.getMaxItineraryOrder(idLinha);
+			// Não causa NullPointerException porque a existência do ponto já foi testada acima
 			Linha linha = this.linhaRepository.findById(idLinha).get();
 			Itinerario itinerario = this.itinerarioConverter.fromDto(itinerarioDto);
 
@@ -217,8 +230,10 @@ public class OnibusController {
 		} else if (!this.itinerarioRepository.existsById(itinerarioDto.getId())) {
 			result = new ResponseEntity<String>("Itinerário com a identifiação [" + itinerarioDto.getId().toString() + "] não encontrado!", HttpStatus.BAD_REQUEST);
 		} else {
+			// Não causa NullPointerException porque a existência do ponto já foi testada acima
 			Itinerario itinerario = this.itinerarioRepository.findById(itinerarioDto.getId()).get();
 
+			// Propositalmente, a ordem do ponto não é modificado. Opção momentânea de regra de negócio
 			itinerario.setLatitude(itinerarioDto.getLatitude());
 			itinerario.setLongitude(itinerarioDto.getLongitude());
 			this.itinerarioRepository.save(itinerario);
@@ -235,6 +250,7 @@ public class OnibusController {
 		if (idItinerario == null || idItinerario.intValue() <= 0) {
 			result = new ResponseEntity<String>("A identificação do itinerário é inválida!", HttpStatus.BAD_REQUEST);
 		} else {
+			// Optional<?> é uma opção ao existsById do CRUDRepository
 			Optional<Itinerario> itinerario = this.itinerarioRepository.findById(idItinerario);
 
 			if (itinerario.isPresent()) {
@@ -259,12 +275,20 @@ public class OnibusController {
 		} else if (pontoReferenciaDto.getRaio() == null) {
 			result = new ResponseEntity<String>("O raio a partir do ponto de referência é de preenchimento obrigatório!", HttpStatus.BAD_REQUEST);
 		} else {
+			// Busca todas as linhas de ônibus da base uma única vez porque a partir de então as mesmas ficam no cache do Hibernate
 			Iterable<Linha> linhas = this.linhaRepository.findAll();
 			List<Linha> linhasResultantes = new ArrayList<>();
 			double latitude = pontoReferenciaDto.getLatitude().doubleValue();
 			double longitude = pontoReferenciaDto.getLongitude().doubleValue();
 			double raio = pontoReferenciaDto.getRaio().doubleValue();
 
+			// Para cada linha de ônibus, verifica-se a distância do ponto informado como
+			// parâmetro até cada um dos pontos de seu itinerário
+			// A solução não cobre a situação em que a circunferência tangencia ou
+			// intersecta a linha formada por dois pontos do itinerário,
+			// mas sem englobar nenhum destes pontos
+			// Trata-se de uma simplificação. Solução ideal é utilizar módulos GEO presente
+			// na maioria dos bancos de dados atuais. São eficientes e precisos
 			for (Linha linha : linhas) {
 				if (this.isLineInRadius(latitude, longitude, raio, linha.getItinerarios())) {
 					linhasResultantes.add(linha);
@@ -279,6 +303,15 @@ public class OnibusController {
 		return result;
 	}
 
+	/**
+	 * Carrega o itinerário da linha. Isso é realizado para alguns rotinas da API
+	 * pois nem sempre o consumidor da API necessita do itinerário, isso evite
+	 * exceço de processamento e carga de dados na rede.
+	 * 
+	 * @param linhas A lista de entities correspondente ao itinerário e que é
+	 *               convertida em uma lista de DTOs
+	 * @return O itinerário no formato DTO
+	 */
 	private List<LinhaDto> getLineDtos(List<Linha> linhas) {
 		List<LinhaDto> result = new ArrayList<>();
 
@@ -295,6 +328,15 @@ public class OnibusController {
 		return result;
 	}
 
+	/**
+	 * Rotina utilizada para determinar se há outra linha com o mesmo código,
+	 * utilizando-se seu id
+	 * 
+	 * @param id     A identificação da linha candidata a ter seu código alterado
+	 * @param linhas Listagem de linhas encontradas no banco de dados com o código
+	 * @return -1 se não há outra linha com o mesmo código, ou número maior ou igual
+	 *         a zero indicando que há outra linha com o mesmo código
+	 */
 	private int otherLineExists(Integer id, List<Linha> linhas) {
 		int result = -1;
 
@@ -321,42 +363,28 @@ public class OnibusController {
 		boolean result = false;
 
 		if (itinerarios.size() > 1) {
-			Itinerario pontoA;
+			Itinerario ponto;
 			double distancia;
 
 			for (int i = 0; i < itinerarios.size() - 1 && !result; i++) {
-				pontoA = itinerarios.get(i);
-				distancia = this.getDistanceBetweenCoordinates(latitudePonto, longitudePonto,
-						pontoA.getLatitude().doubleValue(), pontoA.getLongitude().doubleValue());
+				ponto = itinerarios.get(i);
+
+				// A solução não cobre a situação em que a circunferência tangencia ou
+				// intersecta a linha formada por dois pontos do itinerário,
+				// mas sem englobar nenhum destes pontos
+				// Trata-se de uma simplificação. Solução ideal é utilizar módulos GEO presente
+				// na maioria dos bancos de dados atuais. São eficientes e precisos
+				distancia = this.geodeticService.getDistanceBetweenCoordinates(latitudePonto, longitudePonto,
+						ponto.getLatitude().doubleValue(), ponto.getLongitude().doubleValue());
+
 				result = distancia <= raio;
 			}
 		} else if (itinerarios.size() == 1) {
-			double distancia = this.getDistanceBetweenCoordinates(latitudePonto, latitudePonto, itinerarios.get(0).getLatitude().doubleValue(), itinerarios.get(0).getLongitude().doubleValue());
+			double distancia = this.geodeticService.getDistanceBetweenCoordinates(latitudePonto, latitudePonto, itinerarios.get(0).getLatitude().doubleValue(), itinerarios.get(0).getLongitude().doubleValue());
 			result = distancia <= raio;
 		}
 
 		return result;
-	}
-
-	/**
-	 * Calcula a distância, em Km, entre duas coordenadas geodésicas.
-	 * 
-	 * @param lat1  Latitude da primeira coordenada geodésica.
-	 * @param lon1 Longitude da primeira coordenada geodésica.
-	 * @param lat2  Latitude da segunda coordenada geodésica.
-	 * @param lon2 Longitude da segunda coordenada geodésica.
-	 * @return A distância em Km.
-	 */
-	private double getDistanceBetweenCoordinates(double lat1, double lon1, double lat2, double lon2) {
-		double theta = lon1 - lon2;
-		double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2))
-				+ Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
-		dist = Math.acos(dist);
-		dist = Math.toDegrees(dist);
-		// 1 milha = 1.609344 quilômetros
-		dist = dist * 60 * 1.1515 * 1.609344;
-
-		return (dist);
 	}
 
 }
