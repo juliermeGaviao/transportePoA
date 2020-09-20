@@ -1,0 +1,347 @@
+{
+	"info": {
+		"_postman_id": "5b1114ea-2457-4a64-b688-5bee41d8346b",
+		"name": "TransportePoA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Buscar Linha Pelo Nome",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/onibus/buscarLinhaPeloNome/menino",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"onibus",
+						"buscarLinhaPeloNome",
+						"menino"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar Linha Pelo Codigo",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/onibus/buscarLinhaPeloCodigo/250-1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"onibus",
+						"buscarLinhaPeloCodigo",
+						"250-1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Inserir Linha",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nome\": \"Zona Sul\",\n    \"codigo\": \"250-1\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/onibus/inserirLinha",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"onibus",
+						"inserirLinha"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Editar Linha",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 5542,\n    \"codigo\": \"1493-1\",\n    \"nome\": \"ICARAI/MENINO DEUS\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/onibus/editarLinha",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"onibus",
+						"editarLinha"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remover Linha",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/onibus/removerLinha/6031",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"onibus",
+						"removerLinha",
+						"6031"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar Itinerário Pela Linha",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/onibus/buscarItinerario/5530",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"onibus",
+						"buscarItinerario",
+						"5530"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Inserir Itinerário",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"latitude\": -30.031553,\n    \"longitude\": -51.227795\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/onibus/inserirItinerario/5530",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"onibus",
+						"inserirItinerario",
+						"5530"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Editar Itinerário",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 10020001,\n    \"latitude\": -30,\n    \"longitude\": -51.227795\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/onibus/editarItinerario",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"onibus",
+						"editarItinerario"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remover Itinerário",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/onibus/removerItinerario/10020205",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"onibus",
+						"removerItinerario",
+						"10020205"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Filtrar Linhas por Raio",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"latitude\": -30.052785,\n    \"longitude\": -51.144045,\n    \"raio\": 0.5\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/onibus/linhasDentroRaio",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"onibus",
+						"linhasDentroRaio"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Inserir Ponto de Táxi",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nome\": \"PONTO-ZONA-LESTE-3\",\n    \"latitude\": -30.052785,\n    \"longitude\": -51.144045\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/taxi/inserirPontoTaxi",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"taxi",
+						"inserirPontoTaxi"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar Ponto de Táxi",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/taxi/buscarPontoTaxi/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"taxi",
+						"buscarPontoTaxi",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Filtrar Pontos de Táxi por Raio",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"latitude\": -30.052785,\n    \"longitude\": -51.144045,\n    \"raio\": 1\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/taxi/pontosTaxiDentroRaio",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"taxi",
+						"pontosTaxiDentroRaio"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
