@@ -104,7 +104,7 @@ public class OnibusController {
 
 				linha = this.linhaRepository.save(linha);
 
-				result = new ResponseEntity<Integer>(linha.getId(), HttpStatus.OK);
+				result = new ResponseEntity<Integer>(linha.getId(), HttpStatus.CREATED);
 			}
 		}
 
@@ -211,7 +211,7 @@ public class OnibusController {
 			itinerario.setLinha(linha);
 			itinerario = this.itinerarioRepository.save(itinerario);
 
-			result = new ResponseEntity<Integer>(itinerario.getId(), HttpStatus.OK);
+			result = new ResponseEntity<Integer>(itinerario.getId(), HttpStatus.CREATED);
 		}
 
 		return result;

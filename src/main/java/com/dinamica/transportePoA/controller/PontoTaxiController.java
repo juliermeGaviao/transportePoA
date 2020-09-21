@@ -37,36 +37,14 @@ public class PontoTaxiController {
 	public List<PontoTaxiDto> getPontoTaxiDtoList() {
 		// Pontos lidos do arquivo apenas uma vez
 		if (this.pontoTaxiDtoList == null) {
-			this.pontoTaxiDtoList = new ArrayList<>();
-
-			try {
-				// Arquivo de pontos de táxi disponível no diretório de execução da aplicação
-				BufferedReader reader = new BufferedReader(new FileReader("ponto_taxi.csv"));
-				String line = reader.readLine();
-
-				while (line != null) {
-					StringTokenizer tokenizer = new StringTokenizer(line, "#");
-					PontoTaxiDto pontoTaxiDto = new PontoTaxiDto();
-
-					pontoTaxiDto.setNome(tokenizer.nextToken());
-					pontoTaxiDto.setLatitude(Float.parseFloat(tokenizer.nextToken()));
-					pontoTaxiDto.setLongitude(Float.parseFloat(tokenizer.nextToken()));
-					pontoTaxiDto.setDataCadastro(tokenizer.nextToken());
-
-					this.pontoTaxiDtoList.add(pontoTaxiDto);
-
-					line = reader.readLine();
-				}
-
-				reader.close();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			this.loadFile();
 		}
 
 		return this.pontoTaxiDtoList;
+	}
+
+	public void setPontoTaxiDtoList(List<PontoTaxiDto> pontoTaxiDtoList) {
+		this.pontoTaxiDtoList = pontoTaxiDtoList;
 	}
 
 	@RequestMapping(value="/taxi/inserirPontoTaxi", method=RequestMethod.POST)
@@ -95,9 +73,52 @@ public class PontoTaxiController {
 				pontoTaxiDto.setDataCadastro(dataCadastro);
 				this.getPontoTaxiDtoList().add(pontoTaxiDto);
 
-				result = new ResponseEntity<PontoTaxiDto>(pontoTaxiDto, HttpStatus.OK);
+				result = new ResponseEntity<PontoTaxiDto>(pontoTaxiDto, HttpStatus.CREATED);
 			} catch (IOException e) {
 				result = new ResponseEntity<String>("Erro ao gravar arquivo de pontos de táxi!", HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+
+		return result;
+	}
+
+	@RequestMapping(value="/taxi/removerPontoTaxi/{nome}", method=RequestMethod.DELETE)
+	public ResponseEntity<?> removeTaxiPoint(@PathVariable String nome) {
+		ResponseEntity<?> result;
+
+		if (nome == null || nome.trim().length() == 0) {
+			result = new ResponseEntity<String>("Nome é de preenchimento obrigatório!", HttpStatus.BAD_REQUEST);
+		} else {
+			List<PontoTaxiDto> pontoTaxiDtoList = new ArrayList<>();
+			
+			for (PontoTaxiDto pontoTaxiDto : this.getPontoTaxiDtoList()) {
+				if (!nome.trim().equalsIgnoreCase(pontoTaxiDto.getNome().trim())) {
+					pontoTaxiDtoList.add(pontoTaxiDto);
+				}
+			}
+
+			if (pontoTaxiDtoList.size() == this.pontoTaxiDtoList.size()) {
+				result = new ResponseEntity<String>("Ponto de táxi ["+ nome + "] não encontrado!", HttpStatus.BAD_REQUEST);
+			} else {
+				try {
+					// Arquivo de pontos de táxi está no diretório de execução da aplicação
+					FileWriter writer = new FileWriter("ponto_taxi.csv");
+					
+					for (PontoTaxiDto pontoTaxiDto : pontoTaxiDtoList) {
+						writer.append(pontoTaxiDto.getNome()).append('#');
+						writer.append(pontoTaxiDto.getLatitude().toString()).append('#');
+						writer.append(pontoTaxiDto.getLongitude().toString()).append('#');
+						writer.append(pontoTaxiDto.getDataCadastro()).append('\n');
+					}
+					
+					writer.close();
+
+					this.setPontoTaxiDtoList(pontoTaxiDtoList);
+					
+					result = new ResponseEntity<Boolean>(Boolean.TRUE, HttpStatus.OK);
+				} catch (IOException e) {
+					result = new ResponseEntity<String>("Erro ao gravar arquivo de pontos de táxi!", HttpStatus.INTERNAL_SERVER_ERROR);
+				}
 			}
 		}
 
@@ -159,4 +180,35 @@ public class PontoTaxiController {
 
 		return result;
 	}
+
+	private void loadFile() {
+		this.pontoTaxiDtoList = new ArrayList<>();
+
+		try {
+			// Arquivo de pontos de táxi disponível no diretório de execução da aplicação
+			BufferedReader reader = new BufferedReader(new FileReader("ponto_taxi.csv"));
+			String line = reader.readLine();
+
+			while (line != null) {
+				StringTokenizer tokenizer = new StringTokenizer(line, "#");
+				PontoTaxiDto pontoTaxiDto = new PontoTaxiDto();
+
+				pontoTaxiDto.setNome(tokenizer.nextToken());
+				pontoTaxiDto.setLatitude(Float.parseFloat(tokenizer.nextToken()));
+				pontoTaxiDto.setLongitude(Float.parseFloat(tokenizer.nextToken()));
+				pontoTaxiDto.setDataCadastro(tokenizer.nextToken());
+
+				this.pontoTaxiDtoList.add(pontoTaxiDto);
+
+				line = reader.readLine();
+			}
+
+			reader.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 }

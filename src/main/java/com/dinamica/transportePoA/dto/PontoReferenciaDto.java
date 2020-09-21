@@ -11,6 +11,12 @@ public class PontoReferenciaDto {
     public PontoReferenciaDto() {
     }
 
+    public PontoReferenciaDto(Float latitude, Float longitude, Float raio) {
+    	this.setLatitude(latitude);
+    	this.setLongitude(longitude);
+    	this.setRaio(raio);
+    }
+
 	public Float getLatitude() {
 		return latitude;
 	}

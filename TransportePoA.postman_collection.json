@@ -11,7 +11,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/onibus/buscarLinhaPeloNome/menino",
+					"raw": "http://localhost:8080/onibus/buscarLinhaPeloNome/maio",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -20,7 +20,7 @@
 					"path": [
 						"onibus",
 						"buscarLinhaPeloNome",
-						"menino"
+						"maio"
 					]
 				}
 			},
@@ -60,7 +60,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"nome\": \"Zona Sul\",\n    \"codigo\": \"250-1\"\n}"
+					"raw": "{\n    \"nome\": \"Zona Sul\",\n    \"codigo\": \"250-3\"\n}"
 				},
 				"url": {
 					"raw": "http://localhost:8080/onibus/inserirLinha",
@@ -325,7 +325,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"latitude\": -30.052785,\n    \"longitude\": -51.144045,\n    \"raio\": 1\n}"
+					"raw": "{\n    \"latitude\": -30.052785,\n    \"longitude\": -51.144045,\n    \"raio\": 8\n}"
 				},
 				"url": {
 					"raw": "http://localhost:8080/taxi/pontosTaxiDentroRaio",
@@ -337,6 +337,27 @@
 					"path": [
 						"taxi",
 						"pontosTaxiDentroRaio"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remover Ponto de Táxi",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/taxi/removerPontoTaxi/PONTO-ZONA-LESTE-3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"taxi",
+						"removerPontoTaxi",
+						"PONTO-ZONA-LESTE-3"
 					]
 				}
 			},

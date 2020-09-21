@@ -13,6 +13,12 @@ public class PontoTaxiDto {
 	public PontoTaxiDto() {
 	}
 
+	public PontoTaxiDto(String nome, Float latitude, Float longitude) {
+		this.setNome(nome);
+		this.setLatitude(latitude);
+		this.setLongitude(longitude);
+	}
+
 	public String getNome() {
 		return nome;
 	}
