@@ -4,7 +4,7 @@ public class ItinerarioDto {
 
 	private Integer id;
 
-	private LinhaDto linha;
+	private Integer idLinha;
 
 	private Integer ordem;
 
@@ -30,12 +30,12 @@ public class ItinerarioDto {
 		this.id = id;
 	}
 
-	public LinhaDto getLinha() {
-		return linha;
+	public Integer getIdLinha() {
+		return idLinha;
 	}
 
-	public void setLinha(LinhaDto linha) {
-		this.linha = linha;
+	public void setIdLinha(Integer idLinha) {
+		this.idLinha = idLinha;
 	}
 
 	public Integer getOrdem() {

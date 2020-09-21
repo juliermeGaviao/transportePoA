@@ -8,12 +8,13 @@ import org.springframework.stereotype.Service;
 
 import com.dinamica.transportePoA.dto.ItinerarioDto;
 import com.dinamica.transportePoA.model.Itinerario;
+import com.dinamica.transportePoA.repository.LinhaRepository;
 
 @Service
 public class ItinerarioConverter {
 
 	@Autowired
-	private LinhaConverter linhaConverter;
+	private LinhaRepository linhaRepository;
 
 	public Itinerario fromDto(ItinerarioDto itinerario) {
 		if (itinerario == null) {
@@ -22,8 +23,8 @@ public class ItinerarioConverter {
 
 		Itinerario result = new Itinerario(itinerario.getId(), itinerario.getOrdem(), itinerario.getLatitude(), itinerario.getLongitude());
 
-		if (itinerario.getLinha() != null) {
-			result.setLinha(this.linhaConverter.fromDto(itinerario.getLinha()));
+		if (itinerario.getIdLinha() != null) {
+			result.setLinha(this.linhaRepository.findById(itinerario.getIdLinha()).get());
 		}
 
 		return result;
@@ -37,7 +38,7 @@ public class ItinerarioConverter {
 		ItinerarioDto result = new ItinerarioDto(itinerario.getId(), itinerario.getOrdem(), itinerario.getLatitude(), itinerario.getLongitude());
 
 		if (itinerario.getLinha() != null) {
-			result.setLinha(this.linhaConverter.toDto(itinerario.getLinha()));
+			result.setIdLinha(itinerario.getLinha().getId());
 		}
 
 		return result;

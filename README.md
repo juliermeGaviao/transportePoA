@@ -41,15 +41,21 @@ no Postman.
 
 ## Buscar Linha Pelo Nome
 
-Caminho: /onibus/buscarLinhaPeloNome/{nome}
-Verbo HTTP: GET
+**Caminho**: /onibus/buscarLinhaPeloNome/{nome}
 
-| Parâmetro | Tipo   | Local | Obrigatório |
-|-----------|--------|-------|-------------|
-| nome      | String | URL   | Sim         |
+**Verbo HTTP**: GET
 
-Resultado: lista de objetos com os seguintes campos
+| Parâmetro | Tipo   | Local | Obrigatório | Descição                                             |
+|-----------|--------|-------|-------------|------------------------------------------------------|
+| nome      | String | URL   | Sim         | Texto a ser buscado no nome de cada linha de õnibus. |
 
+**Resultado**: lista de linhas cujo nome contém o texto informado no parâmetro "nome". Cada objeto desta lista contém os seguintes campos:
 
+| Campo       | Tipo    | Descrição                                                                                                     |
+|-------------|---------|---------------------------------------------------------------------------------------------------------------|
+| id          | Integer | Identificação da linha de ônibus                                                                              |
+| codigo      | String  | Código da linha de ônibus. Ex: 250-1                                                                          |
+| nome        | String  | Nome da linha de ônibus. Ex: 43                                                                               |
+| itinerarios | List    | Linha de objetos com os pares de coordenadas geográficas. Tais pares compõem o itinerário da linha de ônibus. |
 
 # API Táxi
