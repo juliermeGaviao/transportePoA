@@ -1,1 +1,55 @@
-# transportePoA
+# TransportePoA
+
+O projeto TransportePoA é uma API REST implementada em Spring Boot.
+
+# Requerimentos
+
+- JDK 1.8 ou superior
+- Maven 3 ou superior
+- Git 2.25 ou superior
+- Docker 19.03 ou superior
+- Postman 7 ou superior
+
+# Construção e Implantação
+
+O projeto está disponível via GIT, para obtê-lo:
+
+`git clone https://github.com/juliermeGaviao/transportePoA.git`
+
+Dentro do diretório "transportePoA", construir a aplicação:
+
+`mvn install`
+
+A partir disso, a aplicação pode ser implantada no Docker, é necessário permissão de super usuário:
+
+`docker build --build-arg JAR_FILE=target/transportePoA-0.1.0.jar -t transportepoa .`
+
+# Execução
+
+A aplicação pode ser iniciada com o seguinte comando, também necessita permissão de super usuário:
+
+`docker run -p 8080:8080 transportepoa`
+
+A aplicação estará disponível na porta 8080.
+
+# Requisições
+
+Requisições exemplo da API estão disponíveis no arquivo "TransportePoA.postman_collection.json", o qual pode ser importado e as requisições disparadas
+no Postman.
+
+# API Ônibus
+
+## Buscar Linha Pelo Nome
+
+Caminho: /onibus/buscarLinhaPeloNome/{nome}
+Verbo HTTP: GET
+
+| Parâmetro | Tipo   | Local | Obrigatório |
+|-----------|--------|-------|-------------|
+| nome      | String | URL   | Sim         |
+
+Resultado: lista de objetos com os seguintes campos
+
+
+
+# API Táxi
