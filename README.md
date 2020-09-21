@@ -2,7 +2,7 @@
 
 O projeto TransportePoA é uma API REST implementada em Spring Boot para controle de cadastro de linhas de ônibus e pontos de táxi da cidade de Porto Alegre.
 
-Tal framework foi adotao em função de prévia experiência nessa plataforma, simplicidade e bem conhecido no mercado de desenvolvedores Java. O banco de dados usado é o H2, já que o volume de dados é pequeno e pode ser manipulado por um banco de dados relacional em memório RAM.
+Tal framework foi adotao em função de prévia experiência nessa plataforma, simplicidade e boa aceitação entre os desenvolvedores Java. O banco de dados usado é o H2, já que o volume de dados é pequeno e pode ser manipulado por um banco de dados relacional em memório RAM.
 
 # Requerimentos
 
