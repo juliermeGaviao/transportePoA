@@ -1,6 +1,8 @@
 # TransportePoA
 
-O projeto TransportePoA é uma API REST implementada em Spring Boot.
+O projeto TransportePoA é uma API REST implementada em Spring Boot para controle de cadastro de linhas de ônibus e pontos de táxi da cidade de Porto Alegre.
+
+Tal framework foi adotao em função de prévia experiência nessa plataforma, simplicidade e bem conhecido no mercado de desenvolvedores Java. O banco de dados usado é o H2, já que o volume de dados é pequeno e pode ser manipulado por um banco de dados relacional em memório RAM.
 
 # Requerimentos
 
@@ -47,7 +49,7 @@ no Postman.
 
 | Parâmetro | Tipo   | Local | Obrigatório | Descição                                             |
 |-----------|--------|-------|-------------|------------------------------------------------------|
-| nome      | String | URL   | Sim         | Texto a ser buscado no nome de cada linha de õnibus. |
+| nome      | String | URL   | Sim         | Texto a ser buscado no nome de cada linha de ônibus. |
 
 **Resultado**: lista de linhas cujo nome contém o texto informado no parâmetro "nome". Cada objeto desta lista contém os seguintes campos:
 
@@ -55,7 +57,7 @@ no Postman.
 |-------------|---------|---------------------------------------------------------------------------------------------------------------|
 | id          | Integer | Identificação da linha de ônibus                                                                              |
 | codigo      | String  | Código da linha de ônibus. Ex: 250-1                                                                          |
-| nome        | String  | Nome da linha de ônibus. Ex: 43                                                                               |
+| nome        | String  | Nome da linha de ônibus. Ex: Campus-Ipiranga                                                                  |
 | itinerarios | List    | Linha de objetos com os pares de coordenadas geográficas. Tais pares compõem o itinerário da linha de ônibus. |
 
 # API Táxi
