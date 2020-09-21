@@ -106,7 +106,7 @@ public class OnibusControllerTest extends CommonTest {
 			PontoReferenciaDto ponto = new PontoReferenciaDto(new Float(-30.052785), new Float(-51.144045), new Float(0.5));
 
 			this.mockMvc.perform(post(new URI("/onibus/linhasDentroRaio")).content(asJsonString(ponto)).contentType(this.jsonContentType)).andExpect(status().isOk())
-				.andExpect(content().contentType(this.jsonContentType)).andExpect(jsonPath("$.length()", is(5)));
+				.andExpect(content().contentType(this.jsonContentType)).andExpect(jsonPath("$.length()", is(38)));
 		} catch (URISyntaxException e) {
 			fail("Invalid URI on /onibus/linhasDentroRaio calling");
 		} catch (Exception e) {
