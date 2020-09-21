@@ -56,7 +56,7 @@ public class OnibusController {
 		ResponseEntity<?> result;
 
 		if (linhasDto.isEmpty()) {
-			result = new ResponseEntity<String>("Nenhuma linha encontrada!", HttpStatus.BAD_REQUEST);
+			result = new ResponseEntity<String>("Nenhuma linha encontrada!", HttpStatus.NO_CONTENT);
 		} else {
 			result = new ResponseEntity<List<LinhaDto>>(linhasDto, HttpStatus.OK);
 		}
@@ -77,7 +77,7 @@ public class OnibusController {
 		ResponseEntity<?> result;
 
 		if (linhasDto.isEmpty()) {
-			result = new ResponseEntity<String>("Nenhuma linha encontrada!", HttpStatus.BAD_REQUEST);
+			result = new ResponseEntity<String>("Nenhuma linha encontrada!", HttpStatus.NO_CONTENT);
 		} else {
 			result = new ResponseEntity<List<LinhaDto>>(linhasDto, HttpStatus.OK);
 		}
@@ -128,7 +128,7 @@ public class OnibusController {
 			int sameCode = this.otherLineExists(linhaDto.getId(), this.linhaRepository.findByCode(linhaDto.getCodigo().trim().toUpperCase()));
 
 			if (sameCode > 0) {
-				result = new ResponseEntity<String>("Já existe outra linha com o mesmo código, de identifiação [" + sameCode + "]!", HttpStatus.BAD_REQUEST);
+				result = new ResponseEntity<String>("Já existe outra linha com o mesmo código, de identifiação [" + sameCode + "]!", HttpStatus.CONFLICT);
 			} else {
 				Linha linha = this.linhaRepository.findById(linhaDto.getId()).get();
 
