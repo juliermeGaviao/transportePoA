@@ -156,7 +156,7 @@ public class OnibusController {
 				this.linhaRepository.delete(linha.get());
 				result = new ResponseEntity<Boolean>(Boolean.TRUE, HttpStatus.OK);
 			} else {
-				result = new ResponseEntity<String>("Linha com a identifiação [" + idLinha.toString() + "] não encontrada!", HttpStatus.BAD_REQUEST);
+				result = new ResponseEntity<String>("Linha com a identifiação [" + idLinha.toString() + "] não encontrada!", HttpStatus.NO_CONTENT);
 			}
 		}
 
@@ -179,7 +179,7 @@ public class OnibusController {
 
 				result = new ResponseEntity<List<ItinerarioDto>>(itinerariosDto, HttpStatus.OK);
 			} else {
-				result = new ResponseEntity<String>("Itinerário da linha com a identifiação [" + idLinha.toString() + "] não encontrado!", HttpStatus.BAD_REQUEST);
+				result = new ResponseEntity<String>("Itinerário da linha com a identifiação [" + idLinha.toString() + "] não encontrado!", HttpStatus.NO_CONTENT);
 			}
 		}
 
@@ -197,7 +197,7 @@ public class OnibusController {
 		} else if (itinerarioDto.getLongitude() == null) {
 			result = new ResponseEntity<String>("Longitude é de preenchimento obrigatório!", HttpStatus.BAD_REQUEST);
 		} else if (!this.linhaRepository.existsById(idLinha)) {
-			result = new ResponseEntity<String>("Não existe linha com identificação [" + idLinha.toString() + "]!", HttpStatus.BAD_REQUEST);
+			result = new ResponseEntity<String>("Não existe linha com identificação [" + idLinha.toString() + "]!", HttpStatus.NO_CONTENT);
 		} else {
 			// Ao inserir um ponto de itinerário, a maior ordem é utilizada, independentemente se um ponto no meio tenha sido removido
 			// Ainda assim, a ordem entre os pontos é preservada
@@ -228,7 +228,7 @@ public class OnibusController {
 		} else if (itinerarioDto.getId() == null || itinerarioDto.getId() <= 0) {
 			result = new ResponseEntity<String>("Identificação de itinerário inválido!", HttpStatus.BAD_REQUEST);
 		} else if (!this.itinerarioRepository.existsById(itinerarioDto.getId())) {
-			result = new ResponseEntity<String>("Itinerário com a identifiação [" + itinerarioDto.getId().toString() + "] não encontrado!", HttpStatus.BAD_REQUEST);
+			result = new ResponseEntity<String>("Itinerário com a identifiação [" + itinerarioDto.getId().toString() + "] não encontrado!", HttpStatus.NO_CONTENT);
 		} else {
 			// Não causa NullPointerException porque a existência do ponto já foi testada acima
 			Itinerario itinerario = this.itinerarioRepository.findById(itinerarioDto.getId()).get();
@@ -257,7 +257,7 @@ public class OnibusController {
 				this.itinerarioRepository.delete(itinerario.get());
 				result = new ResponseEntity<Boolean>(Boolean.TRUE, HttpStatus.OK);
 			} else {
-				result = new ResponseEntity<String>("Itinerário com a identifiação [" + idItinerario.toString() + "] não encontrado!", HttpStatus.BAD_REQUEST);
+				result = new ResponseEntity<String>("Itinerário com a identifiação [" + idItinerario.toString() + "] não encontrado!", HttpStatus.NO_CONTENT);
 			}
 		}
 

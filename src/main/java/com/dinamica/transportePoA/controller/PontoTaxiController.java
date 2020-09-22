@@ -47,6 +47,33 @@ public class PontoTaxiController {
 		this.pontoTaxiDtoList = pontoTaxiDtoList;
 	}
 
+	@RequestMapping("/taxi/buscarPontoTaxi/{nome}")
+	public ResponseEntity<?> findByName(@PathVariable String nome) {
+		ResponseEntity<?> result;
+
+		if (nome == null || nome.trim().length() == 0) {
+			result = new ResponseEntity<String>("Parâmetro \"nome\" é necessário para se fazer a busca!", HttpStatus.BAD_REQUEST);
+		} else {
+			List<PontoTaxiDto> pontosTaxiEncontrados = new ArrayList<>();
+			String buscar = nome.trim().toUpperCase();
+
+			// Seleciona qualquer ponto de táxi cujo nome contenha o parâmetro do método como substring
+			for (PontoTaxiDto pontoTaxiDto : this.getPontoTaxiDtoList()) {
+				if (pontoTaxiDto.getNome().contains(buscar)) {
+					pontosTaxiEncontrados.add(pontoTaxiDto);
+				}
+			}
+
+			if (pontosTaxiEncontrados.isEmpty()) {
+				result = new ResponseEntity<String>("Nenhum ponto de táxi encontrado!", HttpStatus.NO_CONTENT);
+			} else {
+				result = new ResponseEntity<List<PontoTaxiDto>>(pontosTaxiEncontrados, HttpStatus.OK);
+			}
+		}
+
+		return result;
+	}
+
 	@RequestMapping(value="/taxi/inserirPontoTaxi", method=RequestMethod.POST)
 	public ResponseEntity<?> insertTaxiPoint(@RequestBody PontoTaxiDto pontoTaxiDto) {
 		ResponseEntity<?> result;
@@ -98,7 +125,7 @@ public class PontoTaxiController {
 			}
 
 			if (pontoTaxiDtoList.size() == this.pontoTaxiDtoList.size()) {
-				result = new ResponseEntity<String>("Ponto de táxi ["+ nome + "] não encontrado!", HttpStatus.BAD_REQUEST);
+				result = new ResponseEntity<String>("Ponto de táxi ["+ nome + "] não encontrado!", HttpStatus.NO_CONTENT);
 			} else {
 				try {
 					// Arquivo de pontos de táxi está no diretório de execução da aplicação
@@ -120,29 +147,6 @@ public class PontoTaxiController {
 					result = new ResponseEntity<String>("Erro ao gravar arquivo de pontos de táxi!", HttpStatus.INTERNAL_SERVER_ERROR);
 				}
 			}
-		}
-
-		return result;
-	}
-
-	@RequestMapping("/taxi/buscarPontoTaxi/{nome}")
-	public ResponseEntity<?> findByName(@PathVariable String nome) {
-		ResponseEntity<?> result;
-
-		if (nome == null || nome.trim().length() == 0) {
-			result = new ResponseEntity<String>("Parâmetro \"nome\" é necessário para se fazer a busca!", HttpStatus.BAD_REQUEST);
-		} else {
-			List<PontoTaxiDto> pontosTaxiEncontrados = new ArrayList<>();
-			String buscar = nome.trim().toUpperCase();
-
-			// Seleciona qualquer ponto de táxi cujo nome contenha o parâmetro do método como substring
-			for (PontoTaxiDto pontoTaxiDto : this.getPontoTaxiDtoList()) {
-				if (pontoTaxiDto.getNome().contains(buscar)) {
-					pontosTaxiEncontrados.add(pontoTaxiDto);
-				}
-			}
-
-			result = new ResponseEntity<List<PontoTaxiDto>>(pontosTaxiEncontrados, HttpStatus.OK);
 		}
 
 		return result;

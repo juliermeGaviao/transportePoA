@@ -129,6 +129,36 @@
 			"response": []
 		},
 		{
+			"name": "Filtrar Linhas por Raio",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"latitude\": -30.052785,\n    \"longitude\": -51.144045,\n    \"raio\": 0.5\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/onibus/linhasDentroRaio",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"onibus",
+						"linhasDentroRaio"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Buscar Itinerário Pela Linha",
 			"request": {
 				"method": "GET",
@@ -232,30 +262,21 @@
 			"response": []
 		},
 		{
-			"name": "Filtrar Linhas por Raio",
+			"name": "Buscar Ponto de Táxi",
 			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"latitude\": -30.052785,\n    \"longitude\": -51.144045,\n    \"raio\": 0.5\n}"
-				},
+				"method": "GET",
+				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/onibus/linhasDentroRaio",
+					"raw": "http://localhost:8080/taxi/buscarPontoTaxi/sul",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"onibus",
-						"linhasDentroRaio"
+						"taxi",
+						"buscarPontoTaxi",
+						"sul"
 					]
 				}
 			},
@@ -286,27 +307,6 @@
 					"path": [
 						"taxi",
 						"inserirPontoTaxi"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Buscar Ponto de Táxi",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8080/taxi/buscarPontoTaxi/3",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"taxi",
-						"buscarPontoTaxi",
-						"3"
 					]
 				}
 			},
